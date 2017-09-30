@@ -282,6 +282,30 @@ int main() {
 
               ptsy.push_back(ref_y_prev);
               ptsy.push_back(ref_y);
+
+            }
+
+            // In Frenet, add evenly 30m spaced points ahead of the starting reference
+            vector<double> next_wp0 = getXY(car_s + 30, (2 + 4 * lane), map_waypoints_s, map_waypoints_x, map_waypoints_y);
+            vector<double> next_wp1 = getXY(car_s + 60, (2 + 4 * lane), map_waypoints_s, map_waypoints_x, map_waypoints_y);
+            vector<double> next_wp2 = getXY(car_s + 90, (2 + 4 * lane), map_waypoints_s, map_waypoints_x, map_waypoints_y);
+
+            ptsx.push_back(next_wp0[0]);
+            ptsx.push_back(next_wp1[0]);
+            ptsx.push_back(next_wp2[0]);
+
+            ptsy.push_back(next_wp0[1]);
+            ptsy.push_back(next_wp1[1]);
+            ptsy.push_back(next_wp2[2]);
+
+            for (int i; i < ptsx.size(); i++)
+            {
+              // shift car reference angle to 0 degrees
+              double shift_x = ptsx[i] - ref_x;
+              double shift_y = ptsy[i] - ref_y;
+
+              ptsx[i] = (shift_x * cos(0 - ref_yaw) - shift_y * sin(0 - ref_yaw));
+              ptsy[i] = (shift_x * sin(0 - ref_yaw) + shift_y * cos(0 - ref_yaw));
               
             }
 
