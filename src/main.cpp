@@ -261,7 +261,15 @@ int main() {
                 double check_speed = sqrt(vx * vx + vy * vy);
                 double check_car_s = sensor_fusion[i][5];
 
-                
+                check_car_s += ((double)prev_size * .02  * check_speed); // if using previous points can project s value out
+                // check s value greater than mine and s gap
+                if ((check_car_s > car_s) && (check_car_s - car_s) < 30)
+                {
+                  // Do some logic here, lower reference velocity so we dont crash into the car in front of us
+                  // could also flag to try to change lanes
+                  ref_val = 29.5; // mph
+                  // too_close = true; 
+                }
               }
             }
 
