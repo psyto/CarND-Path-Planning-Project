@@ -8,6 +8,7 @@
 #include "Eigen-3.3/Eigen/Core"
 #include "Eigen-3.3/Eigen/QR"
 #include "json.hpp"
+#include "spline.h"
 
 using namespace std;
 
@@ -196,6 +197,12 @@ int main() {
   	map_waypoints_dy.push_back(d_y);
   }
 
+  // start in line 1
+  int line = 1;
+
+  // Have a reference velocity to target
+  double ref_val = 49.5; // mph
+
   h.onMessage([&map_waypoints_x,&map_waypoints_y,&map_waypoints_s,&map_waypoints_dx,&map_waypoints_dy](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
@@ -233,6 +240,33 @@ int main() {
           	// Sensor Fusion Data, a list of all other cars on the same side of the road.
           	auto sensor_fusion = j[1]["sensor_fusion"];
 
+            int prev_size = previous_path_x.size();
+
+            // Create a lit of widely spaced (x,y) waypoints, evenly spaced at 30m
+            // Later we will interoperate these waypoints with a spline and fill it in with more more points that control speed.
+            vector<double> ptsx;
+            vector<double> ptxy;
+
+            // reference x, y, yaw states
+            // either we will reference the starting point as where the car is or at the previous paths end point
+            double ref_x = car_x;
+            double ref_y = car_y;
+            double ref_yaw = deg2rad(car_yaw);
+
+            // if previous size is almost empty, use the car as starting reference
+            if (prev_size < 2)
+            {
+              // use two points that make the path tangent to the car
+              double prev_car_x = car_x - cos(car_yaw);
+              double prev_car_y = car_y - sin(car_yaw);
+
+              ptsx.push_back(prev_car_x);
+              ptsx.push_back(car_x);
+
+              ptsy.push_back(prev_car_y);
+              ptsy.push_back(car_y);
+            }
+
           	json msgJson;
 
           	vector<double> next_x_vals;
@@ -241,7 +275,7 @@ int main() {
 
           	// TODO: define a path made up of (x,y) points that the car will visit sequentially every .02 seconds
 
-            double dist_inc = 0.5;
+            double dist_inc = 0.3;
             for (int i = 0; i < 50; i++)
             {
               double next_s = car_s + (i+1) * dist_inc;
