@@ -238,7 +238,7 @@ int main() {
             int lane = 1;
 
             // Have a reference velocity to target
-            double ref_val = 49.5; // mph
+            double ref_vel = 0; // mph
 
             int prev_size = previous_path_x.size();
 
@@ -267,10 +267,24 @@ int main() {
                 {
                   // Do some logic here, lower reference velocity so we dont crash into the car in front of us
                   // could also flag to try to change lanes
-                  ref_val = 29.5; // mph
-                  // too_close = true; 
+                  // ref_vel = 29.5; // mph
+                  too_close = true;
+                  if (lane > 0)
+                  {
+                    lane = 0;
+                  }
+
                 }
               }
+            }
+
+            if (too_close)
+            {
+              ref_vel -= .224;
+            }
+            else if (ref_vel < 49.5)
+            {
+              ref_vel += .224;
             }
 
             // Create a lit of widely spaced (x,y) waypoints, evenly spaced at 30m
@@ -327,7 +341,7 @@ int main() {
 
             ptsy.push_back(next_wp0[1]);
             ptsy.push_back(next_wp1[1]);
-            ptsy.push_back(next_wp2[2]);
+            ptsy.push_back(next_wp2[1]);
 
             for (int i = 0; i < ptsx.size(); i++)
             {
@@ -365,9 +379,9 @@ int main() {
             double x_add_on = 0;
 
             // Fill out the rest of our path planner after filling it with previous points, here we will always output 50 points
-            for (int i = 1; i < 50 - previous_path_x.size(); i++)
+            for (int i = 1; i <= 50 - previous_path_x.size(); i++)
             {
-              double N = (target_dist / (.02 * ref_val / 2.24));
+              double N = (target_dist / (.02 * ref_vel / 2.24));
               double x_point = x_add_on + (target_x) / N;
               double y_point = s(x_point);
 
