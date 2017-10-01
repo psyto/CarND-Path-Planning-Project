@@ -263,7 +263,7 @@ int main() {
 
                 check_car_s += ((double)prev_size * .02  * check_speed); // if using previous points can project s value out
                 // check s value greater than mine and s gap
-                if ((check_car_s > car_s) && (check_car_s - car_s) < 30)
+                if ((check_car_s > car_s) && ((check_car_s - car_s) < 30))
                 {
                   // Do some logic here, lower reference velocity so we dont crash into the car in front of us
                   // could also flag to try to change lanes
