@@ -223,22 +223,49 @@ int main() {
           // j[1] is the data JSON object
 
         	// Main car's localization Data
+
+            // ["x"] The car's x position in map coordinates
           	double car_x = j[1]["x"];
+
+            // ["y"] The car's y position in map coordinates
           	double car_y = j[1]["y"];
+
+            // ["s"] The car's s position in frenet coordinates
           	double car_s = j[1]["s"];
+
+            // ["d"] The car's d position in frenet coordinates
           	double car_d = j[1]["d"];
+
+            // ["yaw"] The car's yaw angle in the map
           	double car_yaw = j[1]["yaw"];
+
+            // ["speed"] The car's speed in MPH
           	double car_speed = j[1]["speed"];
 
           	// Previous path data given to the Planner
+            // ["previous_path_x"] The previous list of x points previously given to the simulator
           	auto previous_path_x = j[1]["previous_path_x"];
+
+            // ["previous_path_y"] The previous list of y points previously given to the simulator
           	auto previous_path_y = j[1]["previous_path_y"];
+
           	// Previous path's end s and d values
+            // ["end_path_s"] The previous list's last point's frenet s value
           	double end_path_s = j[1]["end_path_s"];
+
+            // ["end_path_d"] The previous list's last point's frenet d value
           	double end_path_d = j[1]["end_path_d"];
 
           	// Sensor Fusion Data, a list of all other cars on the same side of the road.
-          	auto sensor_fusion = j[1]["sensor_fusion"];
+            // ["sensor_fusion"]
+            // car's unique ID,
+            // car's x position in map coordinates,
+            // car's y position in map coordinates,
+            // car's x velocity in m/s,
+            // car's y velocity in m/s,
+            // car's s position in frenet coordinates,
+            // car's d position in frenet coordinates.
+            auto sensor_fusion = j[1]["sensor_fusion"];
 
             int prev_size = previous_path_x.size();
 
