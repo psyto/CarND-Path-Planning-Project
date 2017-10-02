@@ -256,6 +256,11 @@ int main() {
               float d = sensor_fusion[i][6];
               if (d < (2 + 4 * lane + 2) && d > (2 + 4 * lane - 2))
               {
+                // The data format of sensor fusion for each car is: [id, x, y, vx, vy, s, d].
+                // The id is a unique identifier for that car.
+                // The x, y values are in global map coordinates.
+                // The vx, vy values are the velocity components, also in reference to the global map.
+                // Finally s and d are the Frenet coordinates for that car.
                 double vx = sensor_fusion[i][3];
                 double vy = sensor_fusion[i][4];
                 double check_speed = sqrt(vx * vx + vy * vy);
@@ -288,7 +293,7 @@ int main() {
             }
 
             // Create a lit of widely spaced (x,y) waypoints, evenly spaced at 30m
-            // Later we will interoperate these waypoints with a spline and fill it in with more more points that control speed.
+            // Later we will interpolate these waypoints with a spline and fill it in with more more points that control speed.
             vector<double> ptsx;
             vector<double> ptsy;
 
